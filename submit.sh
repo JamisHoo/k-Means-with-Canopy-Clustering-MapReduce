@@ -22,14 +22,25 @@ ${HADOOP_HOME}/bin/mapred pipes \
 -conf src/conf.xml \
 -D mapred.reduce.tasks=1 \
 -input jamis_canopy_input/ \
--output jamis_canopy_output/ \
+-output jamis_canopy_centers/ \
 -program bin/jamis_canopy_clustering
 '
 
 # Step 2: label all data with canopy centers
+: '
 ${HADOOP_HOME}/bin/mapred pipes \
 -conf src/conf.xml \
--files data/canopy_output \
+-files data/canopy_centers \
 -input jamis_canopy_input/ \
 -output jamis_canopy_labeled/ \
 -program bin/jamis_label_data
+'
+
+# Step 2: k means iteration
+${HADOOP_HOME}/bin/mapred pipes \
+-conf src/conf.xml \
+-files data/canopy_centers,k_means_centers \
+-input jamis_canopy_labeled/ \
+-output jamis_k_means_centers \
+-program bin/jamis_k_means_iteration
+
