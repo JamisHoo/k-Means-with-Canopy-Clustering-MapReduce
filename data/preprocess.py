@@ -36,16 +36,16 @@ for filename in files:
     input_handler = open(input_data_path + "/" + filename)
 
     # extract movie id
-    movie_id = input_handler.readline()[: -2]
+    movie_id = format(int(input_handler.readline()[: -2]), 'x')
 
     # extract user_ids and corresponding ratings
     for user_line in input_handler.readlines():
         user_id_rating_date = user_line.split(",")
-        user_id = user_id_rating_date[0]
-        rating = user_id_rating_date[1]
+        user_id = format(int(user_id_rating_date[0]), 'x')
+        rating = format(int(user_id_rating_date[1]), 'x')
         user_ratings += str(user_id) + "," + str(rating) + ","
     
-    output_handler.write(movie_id + ":" + user_ratings[: -1] + "\n")
+    output_handler.write(str(movie_id) + ":" + user_ratings[: -1] + "\n")
     user_ratings = ""
 
     counter = counter + 1
