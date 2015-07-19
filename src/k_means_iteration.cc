@@ -15,6 +15,8 @@
 #include <iostream>
 #include <fstream>
 #include <cassert>
+#include <unordered_map>
+#include <algorithm>
 
 #include "hadoop/Pipes.hh"
 #include "hadoop/TemplateFactory.hh"
@@ -23,8 +25,8 @@
 #include "netflix_movie.h"
 
 constexpr size_t canopy_threshold = 2;
-const std::string canopy_centers_path = "canopy_output";
-const std::string k_means_center_path = "k_means_center";
+const std::string canopy_centers_path = "canopy_centers";
+const std::string k_means_center_path = "k_means_centers";
 
 inline std::string to_hex_string(const size_t x) {
     char buff[32] = { 0 };
@@ -63,7 +65,7 @@ public:
         std::string input_value = context.getInputValue(); 
 
         std::string movie_string = 
-            input_value.substr(0, input_value.find_first_of('\t')) + ':'
+            input_value.substr(0, input_value.find_first_of('\t')) + ':' +
             input_value.substr(input_value.find_first_of(';') + 1);
 
         Movie movie = movie_string;
@@ -73,7 +75,7 @@ public:
         std::vector<uint32_t> canopy_ids = string_split(input_value.substr(start_pos + 1, end_pos - start_pos - 1));
 
         float max_distance = -1;
-        Movie* max_distance_movie = nullptr;
+        const Movie* max_distance_movie = nullptr;
         for (const auto canopy_id: canopy_ids) {
             if (canopy_id == movie.movie_id()) continue;
             for (const auto& k_means_center: centers[canopy_id]) {
@@ -110,7 +112,7 @@ private:
 
             for (const auto& canopy_center: canopy_centers) 
                 if (k_means_center.user_match_count(canopy_center) > canopy_threshold) {
-                    auto ite = centers.emplace(canopy_center.movie_id(), { }).first;
+                    auto ite = centers.emplace(canopy_center.movie_id(), std::vector<Movie>()).first;
                     ite->second.push_back(k_means_center);
                 }
         }
@@ -129,13 +131,13 @@ public:
         Movie k_means_center(context.getInputKey());
 
         // <user id, < number of users, total user ratings > >
-        std::unordered_map<uint32_t, std::pair<uint32_t, uint32_t> > new_features:;
+        std::unordered_map<uint32_t, std::pair<uint32_t, uint32_t> > new_features;
 
         while (context.nextValue()) {
-            Movie movie(contet.getInputValue());
+            Movie movie(context.getInputValue());
 
             for (size_t i = 0; i < movie.num_users(); ++i) {
-                auto ite = new_features.emplace(movie.user_id(i), { 0, 0 }).first;
+                auto ite = new_features.emplace(movie.user_id(i), std::make_pair(0, 0)).first;
 
                 ite->second.first += 1;
                 ite->second.second += movie.rating(i);

@@ -86,7 +86,7 @@ public:
         auto last2 = mv.user_ids_.end();
 
         auto rating_iter1 = ratings_.begin();
-        auto rating_iter2 = mv.rating_.begin();
+        auto rating_iter2 = mv.ratings_.begin();
 
         float cond_a = 0;
         float cond_b = 0;
@@ -102,7 +102,7 @@ public:
                 ++first2;
                 ++rating_iter2;
             } else {
-                dot_product += *rating_iter1 * rating_iter2;
+                dot_product += *rating_iter1 * *rating_iter2;
                 cond_a += *rating_iter1 * *rating_iter1;
                 cond_b += *rating_iter2 * *rating_iter2;
                 ++first1; ++first2;

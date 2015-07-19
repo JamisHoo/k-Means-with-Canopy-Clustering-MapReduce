@@ -23,7 +23,7 @@
 #include "netflix_movie.h"
 
 constexpr size_t canopy_threshold = 2;
-const std::string canopy_centers_path = "canopy_output";
+const std::string canopy_centers_path = "canopy_centers";
 
 inline std::string to_hex_string(const size_t x) {
     char buff[32] = { 0 };
