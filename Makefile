@@ -8,12 +8,15 @@ vpath %.cc src $(HADOOP_SRC_PATH)/hadoop
 vpath %.h src $(HADOOP_SRC_PATH)/hadoop
 vpath %.a $(HADOOP_LIB_PATH)
 
-all: canopy_clustering label_data
+all: canopy_clustering label_data k_means_iteration
 
 canopy_clustering: canopy_clustering.cc netflix_movie.h hadooppipes.a
 	$(CXX) $(CXXFLAGS) $< -o$@ -I $(HADOOP_SRC_PATH) $(HADOOP_LIB_PATH)/hadooppipes.a -lcrypto -lpthread
 
 label_data: label_data.cc netflix_movie.h hadooppipes.a
+	$(CXX) $(CXXFLAGS) $< -o$@ -I $(HADOOP_SRC_PATH) $(HADOOP_LIB_PATH)/hadooppipes.a -lcrypto -lpthread
+
+k_means_iteration: k_means_iteration.cc netflix_movie.h hadooppipes.a
 	$(CXX) $(CXXFLAGS) $< -o$@ -I $(HADOOP_SRC_PATH) $(HADOOP_LIB_PATH)/hadooppipes.a -lcrypto -lpthread
 
 hadooppipes.a: HadoopPipes.cc SerialUtils.cc StringUtils.cc
