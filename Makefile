@@ -22,3 +22,8 @@ hadooppipes.a: HadoopPipes.cc SerialUtils.cc StringUtils.cc
 	$(CXX) $(CXXFLAGS) -c $(HADOOP_SRC_PATH)/hadoop/SerialUtils.cc -o $(HADOOP_LIB_PATH)/SerialUtils.o -I $(HADOOP_SRC_PATH)
 	$(CXX) $(CXXFLAGS) -c $(HADOOP_SRC_PATH)/hadoop/StringUtils.cc -o $(HADOOP_LIB_PATH)/StringUtils.o -I $(HADOOP_SRC_PATH)
 	$(AR) rvs $(HADOOP_LIB_PATH)/hadooppipes.a $(HADOOP_LIB_PATH)/HadoopPipes.o $(HADOOP_LIB_PATH)/SerialUtils.o $(HADOOP_LIB_PATH)/StringUtils.o
+
+
+clean:
+	$(RM) canopy_clustering label_data
+	$(RM) -r $(HADOOP_LIB_PATH)
