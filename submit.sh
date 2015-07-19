@@ -17,7 +17,7 @@
 HADOOP_HOME=~/Desktop/hadoop-2.7.1/
 
 # Step 1: get canopy centers
-:'
+: '
 ${HADOOP_HOME}/bin/mapred pipes \
 -conf src/conf.xml \
 -D mapred.reduce.tasks=1 \
@@ -29,6 +29,7 @@ ${HADOOP_HOME}/bin/mapred pipes \
 # Step 2: label all data with canopy centers
 ${HADOOP_HOME}/bin/mapred pipes \
 -conf src/conf.xml \
+-files data/canopy_output \
 -input jamis_canopy_input/ \
 -output jamis_canopy_labeled/ \
--program bin/jamis_labeled_data
+-program bin/jamis_label_data
