@@ -9,8 +9,4 @@
         <name>mapreduce.pipes.isjavarecordwriter</name>
         <value>true</value>
     </property>
-    <property>
-        <name>mapred.reduce.tasks</name>
-        <value>1</value>
-    </property>
 </configuration>
