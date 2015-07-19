@@ -32,7 +32,7 @@ public:
         bool cover_by_other_canopies = false;
 
         for (const auto& mv: canopy_centers) 
-            if (movie.user_match_count(mv) < canopy_threshold) {
+            if (movie.user_match_count(mv) > canopy_threshold) {
                 cover_by_other_canopies = true;
                 break;
             }
@@ -43,6 +43,11 @@ public:
             std::string emit_value = context.getInputValue().substr(colon_pos + 1);
             context.emit(emit_key, emit_value);
 
+            /*
+            std::cout << "Found center: " << std::hex 
+                      << movie.movie_id() << "(" << movie.num_users() << ")" 
+                      << std::endl;
+            */
             canopy_centers.emplace_back(movie); 
         }
     }
@@ -63,11 +68,25 @@ public:
 
             Movie movie(context.getInputKey() + ":" + context.getInputValue());
 
+            /*
+            if (movie.movie_id() == 1) {
+                std::cout << movie.movie_id() << ":";
+                for (size_t i = 0; i < movie.num_users(); ++i)
+                    std::cout << movie.user_id(i) << "," << movie.rating(i) << ",";
+                std::cout << std::endl;
+            }
+            */
+
             bool cover_by_other_canopies = false;
 
             for (const auto& mv: canopy_centers)
-                if (movie.user_match_count(mv) < canopy_threshold) {
+                if (movie.user_match_count(mv) > canopy_threshold) {
                     cover_by_other_canopies = true;
+                    /*
+                    std::cout << "Merge center " << std::hex
+                              << movie.movie_id() << "(" << movie.num_users() << ")" 
+                              << " to " << mv.movie_id() << "(" << mv.num_users() << ")" << std::endl;
+                    */
                     break;
                 }
             
