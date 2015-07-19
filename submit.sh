@@ -39,7 +39,7 @@ ${HADOOP_HOME}/bin/mapred pipes \
 # Step 2: k means iteration
 ${HADOOP_HOME}/bin/mapred pipes \
 -conf src/conf.xml \
--files data/canopy_centers,k_means_centers \
+-files data/canopy_centers,data/k_means_centers \
 -input jamis_canopy_labeled/ \
 -output jamis_k_means_centers \
 -program bin/jamis_k_means_iteration
