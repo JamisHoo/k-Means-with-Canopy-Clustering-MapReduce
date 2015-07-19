@@ -26,9 +26,11 @@
 *.exe
 *.out
 *.app
+canopy_clustering
 
 # vim
 *.swp
 
 # OS X
 *.DS_Store
+
