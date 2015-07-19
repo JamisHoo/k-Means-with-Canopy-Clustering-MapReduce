@@ -14,11 +14,12 @@
  #  Description: 
 ###############################################################################
 
-HADOOP_HOME = ~/hadoop-2.7.1/
+HADOOP_HOME=~/Desktop/hadoop-2.7.1/
 
 
 ${HADOOP_HOME}bin/mapred pipes \
 -conf src/conf.xml \
+-D mapred.reduce.tasks=1 \
 -input jamis_canopy_input/ \
 -output jamis_canopy_output/ \
 -program bin/jamis_canopy_clustering
