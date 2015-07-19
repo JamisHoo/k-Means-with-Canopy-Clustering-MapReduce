@@ -70,13 +70,13 @@ public:
 
         Movie movie = movie_string;
 
-        std::cout << "Load input movie: " << movie.to_string() << std::endl;
+        // std::cout << "Load input movie: " << movie.to_string() << std::endl;
 
         size_t start_pos = input_value.find_first_of('\t');
         size_t end_pos = input_value.find_first_of(';', start_pos);
         std::vector<uint32_t> canopy_ids = string_split(input_value.substr(start_pos + 1, end_pos - start_pos - 1));
         
-        std::cout << "canopy_ids: "; for (const auto i: canopy_ids) std::cout << i << ' '; std::cout << std::endl;
+        // std::cout << "canopy_ids: "; for (const auto i: canopy_ids) std::cout << i << ' '; std::cout << std::endl;
 
         float max_distance = -1;
         const Movie* max_distance_movie = nullptr;
@@ -84,13 +84,13 @@ public:
             if (canopy_id == movie.movie_id()) continue;
             for (const auto& k_means_center: centers[canopy_id]) {
                 float distance = movie.cos_distance(k_means_center);
-                std::cout << "Distance with " << k_means_center.to_string() << " is " << distance;
+                // std::cout << "Distance with " << k_means_center.to_string() << " is " << distance;
                 if (distance > max_distance) {
-                    std::cout << " is max. ";
+                    // std::cout << " is max. ";
                     max_distance = distance;
                     max_distance_movie = &k_means_center;
                 }
-                std::cout << std::endl;
+                // std::cout << std::endl;
             }
         }
 
@@ -99,8 +99,8 @@ public:
         std::string emit_key = max_distance_movie->to_string();
         std::string emit_value = movie_string;
 
-        std::cout << "emit_key = " << emit_key << std::endl;
-        std::cout << "emit_value = " << emit_value << std::endl;
+        // std::cout << "emit_key = " << emit_key << std::endl;
+        // std::cout << "emit_value = " << emit_value << std::endl;
 
         context.emit(emit_key, emit_value);
     }
@@ -112,7 +112,7 @@ private:
         std::string line;
         while (std::getline(fin, line)) {
             canopy_centers.emplace_back(line); 
-            std::cout << "Load cannopy center: " << canopy_centers.back().to_string() << std::endl;
+            // std::cout << "Load cannopy center: " << canopy_centers.back().to_string() << std::endl;
         }
 
     }
@@ -124,14 +124,14 @@ private:
         while (std::getline(fin, line)) {
             Movie k_means_center(line);
 
-            std::cout << "k-means center: " << k_means_center.to_string() << " ";
+            // std::cout << "k-means center: " << k_means_center.to_string() << " ";
             for (const auto& canopy_center: canopy_centers) 
                 if (k_means_center.user_match_count(canopy_center) > canopy_threshold) {
-                    std::cout << "applied to canopy " << canopy_center.to_string() << " ";
+                    // std::cout << "applied to canopy " << canopy_center.to_string() << " ";
                     auto ite = centers.emplace(canopy_center.movie_id(), std::vector<Movie>()).first;
                     ite->second.push_back(k_means_center);
                 }
-            std::cout << std::endl;
+            // std::cout << std::endl;
         }
     }
     
