@@ -46,6 +46,8 @@ input_file.seek(0, 0)
 i = 0
 for line in input_file:
     if bitmap[i]:
+        colon_pos = line.find(':')
+        line = line[: colon_pos] + '\t' + line[colon_pos + 1: ]
         output_file.write(line)
     i += 1
 
