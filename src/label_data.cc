@@ -23,7 +23,7 @@
 #include "netflix_movie.h"
 
 constexpr size_t canopy_threshold = 2;
-const std::string canopy_centers_path = "jamis_canopy_output/part-00000";
+const std::string canopy_centers_path = "canopy_output";
 
 inline std::string to_hex_string(const size_t x) {
     char buff[32] = { 0 };
@@ -54,7 +54,7 @@ public:
 
         emit_value.back() = ';';
 
-        size_t pos = context.getInputValue().find_first_of('\t');
+        size_t pos = context.getInputValue().find_first_of(':');
 
         std::string emit_key = context.getInputValue().substr(0, pos);
         emit_value += context.getInputValue().substr(pos + 1);
@@ -93,6 +93,7 @@ public:
 
 
 int main(int, char**) {
+
     return HadoopPipes::runTask(HadoopPipes::TemplateFactory<LabelDataMapper, DoNothingReducer>());
 }
 
