@@ -110,7 +110,20 @@ public:
             }
         }
 
-        return dot_product / (1 + sqrt(cond_a * cond_b));
+        while (first1 != last1) {
+            cond_a += *rating_iter1 * *rating_iter1;
+            ++first1;
+            ++rating_iter1;
+        }
+
+        while (first2 != last2) {
+            cond_b += *rating_iter2 * *rating_iter2;
+            ++first2;
+            ++rating_iter2;
+        }
+
+
+        return dot_product / (float(0.001) + sqrt(cond_a * cond_b));
     }
 
 private:
