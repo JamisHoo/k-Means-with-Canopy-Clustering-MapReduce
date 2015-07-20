@@ -29,6 +29,8 @@ hadoop_libs
 *.app
 canopy_clustering
 label_data
+k_means_iteration
+k_means_last_iteration
 
 # vim
 *.swp
