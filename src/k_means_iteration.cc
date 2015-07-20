@@ -82,13 +82,13 @@ public:
         const Movie* max_distance_movie = nullptr;
         for (const auto canopy_id: canopy_ids) {
             if (canopy_id == movie.movie_id()) continue;
-            for (const auto& k_means_center: centers[canopy_id]) {
-                float distance = movie.cos_distance(k_means_center);
+            for (const auto k_means_center: centers[canopy_id]) {
+                float distance = movie.cos_distance(k_means_centers[k_means_center]);
                 // std::cout << "Distance with " << k_means_center.to_string() << " is " << distance;
                 if (distance > max_distance) {
                     // std::cout << " is max. ";
                     max_distance = distance;
-                    max_distance_movie = &k_means_center;
+                    max_distance_movie = &k_means_centers[k_means_center];
                 }
                 // std::cout << std::endl;
             }
@@ -122,22 +122,24 @@ private:
 
         std::string line;
         while (std::getline(fin, line)) {
-            Movie k_means_center(line);
+            k_means_centers.push_back(line);
+            Movie& k_means_center = k_means_centers.back();
 
             // std::cout << "k-means center: " << k_means_center.to_string() << " ";
             for (const auto& canopy_center: canopy_centers) 
                 if (k_means_center.user_match_count(canopy_center) > canopy_threshold) {
                     // std::cout << "applied to canopy " << canopy_center.to_string() << " ";
-                    auto ite = centers.emplace(canopy_center.movie_id(), std::vector<Movie>()).first;
-                    ite->second.push_back(k_means_center);
+                    auto ite = centers.emplace(canopy_center.movie_id(), std::vector<uint32_t>()).first;
+                    ite->second.push_back(k_means_centers.size() - 1);
                 }
             // std::cout << std::endl;
         }
     }
     
+    std::vector<Movie> k_means_centers;
     std::vector<Movie> canopy_centers;
-    // canopy movie_id, vector of k-means centers
-    std::unordered_map< uint32_t, std::vector<Movie> > centers;
+    // canopy movie_id, vector of k_means_centers index
+    std::unordered_map< uint32_t, std::vector<uint32_t> > centers;
 };
 
 class kMeansReducer: public HadoopPipes::Reducer {
@@ -146,7 +148,7 @@ public:
 
     void reduce(HadoopPipes::ReduceContext& context) {
         Movie k_means_center(context.getInputKey());
-
+#ifndef LAST_ITERATION
         // <user id, < number of users, total user ratings > >
         std::unordered_map<uint32_t, std::pair<uint32_t, uint32_t> > new_features;
 
@@ -177,6 +179,14 @@ public:
             emit_value.pop_back();
             context.emit(emit_key, emit_value);
         }
+#else
+        std::string emit_value;
+        while (context.nextValue()) {
+            Movie movie(context.getInputValue());
+            emit_value += to_hex_string(movie.movie_id());
+        }
+        context.emit(emit_value, "");
+#endif
     }
 };
 
