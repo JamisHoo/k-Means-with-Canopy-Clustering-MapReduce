@@ -183,8 +183,9 @@ public:
         std::string emit_value;
         while (context.nextValue()) {
             Movie movie(context.getInputValue());
-            emit_value += to_hex_string(movie.movie_id());
+            emit_value += to_hex_string(movie.movie_id()) + ',';
         }
+        if (emit_value.length()) emit_value.pop_back();
         context.emit(emit_value, "");
 #endif
     }
