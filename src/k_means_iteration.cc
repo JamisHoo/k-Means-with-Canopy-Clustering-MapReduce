@@ -81,7 +81,7 @@ public:
         float max_distance = -1;
         const Movie* max_distance_movie = nullptr;
         for (const auto canopy_id: canopy_ids) {
-            if (canopy_id == movie.movie_id()) continue;
+            // if (canopy_id == movie.movie_id()) continue;
             for (const auto k_means_center: centers[canopy_id]) {
                 float distance = movie.cos_distance(k_means_centers[k_means_center]);
                 // std::cout << "Distance with " << k_means_center.to_string() << " is " << distance;
